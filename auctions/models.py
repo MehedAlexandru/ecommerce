@@ -6,7 +6,7 @@ class User(AbstractUser):
     pass
 
 class Auction_listings(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="auctions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     title = models.CharField(max_length=64)
     description = models.TextField()
     starting_bid = models.IntegerField()

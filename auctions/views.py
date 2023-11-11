@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_list_or_404, render
 from django.urls import reverse
 from auctions.models import Auction_listings, Bids, Comments
 from django.contrib.auth.decorators import login_required
@@ -90,3 +90,17 @@ def create_listing(request):
         # the settings.py file has LOGIN_URL = '/login' which redirects to the login page
     })
 
+def active_listings(request):
+    # get all active listings
+    active_listings = get_list_or_404(Auction_listings, active=True)
+    return render(request, "auctions/index.html", {
+        "active_listings": active_listings
+    })
+
+def listing(request, listing_id):
+    # get listing by id
+    listing = Auction_listings.objects.get(pk=listing_id)
+    return render(request, "auctions/listing.html", {   
+        "listing": listing
+    })
+    

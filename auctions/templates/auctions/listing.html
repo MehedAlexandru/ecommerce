@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="card">
+    <div class="card-img d-flex">
+        <img class="card-img-top" src="{{ listing.image_url }}" alt="listing image">
+    </div>
+    <h1 class="card-title">{{ listing.title }}</h1>
+    <p class="card-text">{{ listing.description }}</p>
+    <p class="card-text">Starting bid is {{ listing.starting_bid }} RON</p>
+
+</div>
+{% endblock body %}

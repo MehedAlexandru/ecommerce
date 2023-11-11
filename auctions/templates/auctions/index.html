@@ -3,5 +3,23 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    {% for listing in active_listings %}
+        <div class="card spec">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img class="card-img" src="{{ listing.image_url }}" alt="camaro">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ listing.title }}</h5>
+                        <h6 class="card-subtitle text-muted">By {{ listing.user }}</h6>
+                        <p class="card-text">{{ listing.description|truncatewords:20 }}</p>
+                        <p class="card-text">Starting bid: {{ listing.starting_bid }} RON</p>
+                        <a href="{% url 'listing' listing.id %}" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}
