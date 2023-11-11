@@ -12,8 +12,9 @@ class Auction_listings(models.Model):
     starting_bid = models.IntegerField()
     image_url = models.URLField(blank=True)
     category = models.CharField(max_length=64, blank=True)
+    active = models.BooleanField(default=True)
     def __str__(self) -> str:
-        return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}" 
+        return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}, {self.active}" 
 
 class Bids(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
