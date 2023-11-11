@@ -65,21 +65,28 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+# verify if user is logged in
 @login_required    
 def create_listing(request):
     if request.method == "POST":
         form = NewListingForm(request.POST)
+        # validate form
         if form.is_valid():
             title = form.cleaned_data["title"]
             description = form.cleaned_data["description"]
             starting_bid = form.cleaned_data["starting_bid"]
             image_url = form.cleaned_data["image_url"]
             category = form.cleaned_data["category"]
+            # send data from form to database and redirect to index
             listing = Auction_listings(user=request.user, title=title, description=description, starting_bid=starting_bid, image_url=image_url, category=category)
             listing.save()
             return HttpResponseRedirect(reverse("index"))
+    # if method is GET and user is logged in, display form
     else:
         form = NewListingForm()
     return render(request, "auctions/create_listing.html", {
         "form": form
+        # if user is not logged in, redirect to login page. This is done by the @login_required decorator
+        # the settings.py file has LOGIN_URL = '/login' which redirects to the login page
     })
+
