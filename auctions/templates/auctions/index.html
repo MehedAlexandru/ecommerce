@@ -1,25 +1,35 @@
-{% extends "auctions/layout.html" %}
+{% extends 'auctions/layout.html' %}
 
 {% block body %}
+  <div class="container">
     <h2>Active Listings</h2>
 
     {% for listing in active_listings %}
-        <div class="card spec">
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <img class="card-img" src="{{ listing.image_url }}" alt="camaro">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ listing.title }}</h5>
-                        <h6 class="card-subtitle text-muted">By {{ listing.user }}</h6>
-                        <p class="card-text">{{ listing.description|truncatewords:20 }}</p>
-                        <p class="card-text">Starting bid: {{ listing.starting_bid }} RON</p>
-                        <a href="{% url 'listing' listing.id %}" class="btn btn-primary">View</a>
-                    </div>
-                </div>
-            </div>
+      <div class="card shadow mt-4 rounded-4">
+        <div class="row d-flex">
+          <div class="col-md-4 col-lg-4 d-flex px-4 mt-2 mb-2 media">
+            <img class="card-img mr-3 img-thumbnail rounded-4" src="{{ listing.image_url }}" alt="camaro" style="object-fit: fill;" />
+          </div>
+          <div class="card-body col-lg-8 col-sm-6 px-4 flex-column">
+            <h5 class="card-title ">{{ listing.title }}</h5>
+            <h6 class="card-subtitle  text-muted">By {{ listing.user }}</h6>
+            <p class="card-text pt-3 ">{{ listing.description|truncatewords:20 }}</p>
+          </div>
         </div>
+        <div class="card-footer">
+          <div class="d-flex mx-auto mt-auto">
+            <div class="row col-8">
+              <div class="d-flex row justify-content-start">
+                <p class="card-text pb-0 mb-0">Starting bid: {{ listing.starting_bid }} RON</p>
+                <p class="card-text">Current bid: \NA</p>
+              </div>
+            </div>
+            <div class="d-flex col-4 justify-content-end">
+              <a href="{% url 'listing' listing.id %}" class="btn btn-primary mt-1">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endfor %}
-
+  </div>
 {% endblock %}

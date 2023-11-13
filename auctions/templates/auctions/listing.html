@@ -1,13 +1,26 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<div class="card">
-    <div class="card-img d-flex">
-        <img class="card-img-top" src="{{ listing.image_url }}" alt="listing image">
+<div class="container px-2" style="max-width: 1400px;">
+    <div class="card shadow b-1 rounded-4">
+        <div class="card-img col-sm px-2 border rounded-top-4 d-flex justify-content-center">
+            <img class="card-img rounded-4 spec" src="{{ listing.image_url }}" alt="listing_image">
+        </div>
+        <div class="card-body listig-description">
+            <h1 class="card-title">{{ listing.title }}</h1>
+            <br>
+            <p class="card-text">{{ listing.description }}</p>
+            
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <p class="card-text col-6">Category: {{ listing.category }}</p>
+                <p class="card-text col-6 d-flex justify-content-end">Starting bid is {{ listing.starting_bid }} RON</p>
+            </div>
+
+        </div>
+    
     </div>
-    <h1 class="card-title">{{ listing.title }}</h1>
-    <p class="card-text">{{ listing.description }}</p>
-    <p class="card-text">Starting bid is {{ listing.starting_bid }} RON</p>
 
 </div>
 {% endblock body %}
