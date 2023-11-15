@@ -13,8 +13,9 @@ class Auction_listings(models.Model):
     image_url = models.URLField(blank=True)
     category = models.CharField(max_length=64, blank=True)
     active = models.BooleanField(default=True)
+    watchlist = models.ManyToManyField(User, blank=True, related_name="watchlisted_items")
     def __str__(self) -> str:
-        return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}, {self.active}" 
+        return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}, {self.active}, {self.watchlist}" 
 
 class Bids(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")

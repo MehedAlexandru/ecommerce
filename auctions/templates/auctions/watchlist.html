@@ -2,4 +2,13 @@
 
 {% block body %}
 
+    <h1>Watchlist</h1>
+
+    {% for item in listings %}
+    <p>{{ item.title }}</p>
+{% empty %}
+    <p>No items in watchlist.</p>
+{% endfor %}
+ 
+
 {% endblock body %}

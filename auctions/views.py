@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, render
@@ -96,6 +96,30 @@ def active_listings(request):
     return render(request, "auctions/index.html", {
         "active_listings": active_listings
     })
+
+@login_required
+def add_to_watchlist(request, listing_id):
+    if request.method == "POST": 
+        listingData = Auction_listings.objects.get(pk=listing_id)
+        currentUser = request.user
+        listingData.watchlist.add(currentUser)
+        listingData.save()
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
+@login_required
+def remove_from_watchlist(request, listing_id):
+    if request.method == "POST":
+        listingData = Auction_listings.objects.get(pk=listing_id)
+        currentUser = request.user
+        listingData.watchlist.remove(currentUser)
+        listingData.save()
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+    
+@login_required
+def displayWatchlist(request):
+    currentUser = request.user
+    listings = currentUser.watchlisted_items.all()
+    return render(request, "auctions/watchlist.html", {"listings": listings})
 
 def listing(request, listing_id):
     # get listing by id
