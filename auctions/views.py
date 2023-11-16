@@ -65,8 +65,9 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 # verify if user is logged in
-@login_required    
+@login_required
 def create_listing(request):
     if request.method == "POST":
         form = NewListingForm(request.POST)
@@ -78,7 +79,8 @@ def create_listing(request):
             image_url = form.cleaned_data["image_url"]
             category = form.cleaned_data["category"]
             # send data from form to database and redirect to index
-            listing = Auction_listings(user=request.user, title=title, description=description, starting_bid=starting_bid, image_url=image_url, category=category)
+            listing = Auction_listings(user=request.user, title=title, description=description,
+                                       starting_bid=starting_bid, image_url=image_url, category=category)
             listing.save()
             return HttpResponseRedirect(reverse("index"))
     # if method is GET and user is logged in, display form
@@ -90,6 +92,7 @@ def create_listing(request):
         # the settings.py file has LOGIN_URL = '/login' which redirects to the login page
     })
 
+
 def active_listings(request):
     # get all active listings
     active_listings = get_list_or_404(Auction_listings, active=True)
@@ -97,14 +100,16 @@ def active_listings(request):
         "active_listings": active_listings
     })
 
+
 @login_required
 def add_to_watchlist(request, listing_id):
-    if request.method == "POST": 
+    if request.method == "POST":
         listingData = Auction_listings.objects.get(pk=listing_id)
         currentUser = request.user
         listingData.watchlist.add(currentUser)
         listingData.save()
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
 
 @login_required
 def remove_from_watchlist(request, listing_id):
@@ -114,17 +119,18 @@ def remove_from_watchlist(request, listing_id):
         listingData.watchlist.remove(currentUser)
         listingData.save()
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
-    
+
+
 @login_required
 def displayWatchlist(request):
     currentUser = request.user
     listings = currentUser.watchlisted_items.all()
     return render(request, "auctions/watchlist.html", {"listings": listings})
 
+
 def listing(request, listing_id):
     # get listing by id
     listing = Auction_listings.objects.get(pk=listing_id)
-    return render(request, "auctions/listing.html", {   
+    return render(request, "auctions/listing.html", {
         "listing": listing
     })
-    
