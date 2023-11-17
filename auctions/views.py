@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, render
@@ -122,7 +122,7 @@ def remove_from_watchlist(request, listing_id):
 
 
 @login_required
-def displayWatchlist(request):
+def display_watchlist(request):
     currentUser = request.user
     listings = currentUser.watchlisted_items.all()
     return render(request, "auctions/watchlist.html", {"listings": listings})
@@ -130,7 +130,30 @@ def displayWatchlist(request):
 
 def listing(request, listing_id):
     # get listing by id
-    listing = Auction_listings.objects.get(pk=listing_id)
+    listings = Auction_listings.objects.get(pk=listing_id)
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listings
     })
+
+def bid(request, listing_id):
+    listing = Auction_listings.objects.get(pk=listing_id)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            bid = float(request.POST["bid"])
+            old_bid = float(listing.starting_bid)
+            if bid > old_bid:
+                listing.starting_bid = bid
+                listing.save()
+                return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+            else:
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "message": "Bid must be higher than the current bid"
+                })
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "message": "You must be logged in to place a bid"
+            })
+        
+        
