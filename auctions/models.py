@@ -36,3 +36,10 @@ class Comments(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user}, {self.auction}, {self.comment}"
+
+class Winner(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_winner")
+    auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="winner")
+
+    def __str__(self) -> str:
+        return f"{self.user}, {self.auction}"

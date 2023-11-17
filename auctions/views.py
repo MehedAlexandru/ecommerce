@@ -155,5 +155,6 @@ def bid(request, listing_id):
                 "listing": listing,
                 "message": "You must be logged in to place a bid"
             })
-        
+
+    
         
