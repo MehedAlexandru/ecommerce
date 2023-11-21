@@ -34,6 +34,12 @@
                 </div>
                 <div  class="ms-auto d-flex">
                     {% if user.is_authenticated %}
+                        {% if user == listing.user %}
+                            <form action="{% url 'close_listing' listing.id %}" method='POST'>
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success mx-4">Close listing</button>
+                            </form>
+                        {% endif %}
                     <form action="{% url 'remove_from_watchlist' listing.id %}" method='POST'>
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger mx-4">Remove from watchlist</button>

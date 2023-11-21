@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, render
 from django.urls import reverse
-from auctions.models import Auction_listings, Bids, Comments
+from auctions.models import Auction_listings, Bids
 from django.contrib.auth.decorators import login_required
 from .forms import NewListingForm
 
@@ -143,6 +143,7 @@ def bid(request, listing_id):
             old_bid = float(listing.starting_bid)
             if bid > old_bid:
                 listing.starting_bid = bid
+                listing.winner = request.user
                 listing.save()
                 return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
             else:
@@ -156,5 +157,56 @@ def bid(request, listing_id):
                 "message": "You must be logged in to place a bid"
             })
 
-    
+
+def select_winner(listing_id):
+    listing = Auction_listings.objects.get(pk=listing_id)
+    bids = Bids.objects.filter(pk=listing.id)
+    if bids:
+        highest_bid = bids.order_by('bid').first()
+        winner = highest_bid.user
+        listing.winner = winner
+        listing.save()
+    else:
+        listing.winner = None
+        listing.save()  
+
+
+def close_listing(request, listing_id):
+    listing = Auction_listings.objects.get(pk=listing_id)
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            if request.user == listing.user:
+                select_winner(listing_id)
+                listing.active = False
+                listing.save()
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "winner": listing.winner,
+                })
+            else:
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "message": "You must be the owner of the listing to close the bid"
+                })
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "message": "You must be logged in to close the bid"
+            })
+    # else:
+    #     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
         
+def winned_auctions(request):
+    user = request.user
+    listings = Auction_listings.objects.filter(winner=user) and Auction_listings.objects.filter(active=False)
+    
+    return render(request, "auctions/winned_listings.html", {
+        "listings": listings
+    })
+
+# def comment(request, listing_id):
+#     listing = Auction_listings.objects.get(pk=listing_id)
+#     if request.method == "POST":
+#         if request.user.is_authenticated:
+
+            

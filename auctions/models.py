@@ -15,7 +15,8 @@ class Auction_listings(models.Model):
     category = models.CharField(max_length=64, blank=True)
     active = models.BooleanField(default=True)
     watchlist = models.ManyToManyField(User, blank=True, related_name="watchlisted_items")
-
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winned_auctions", blank=True, null=True)
+    
     def __str__(self) -> str:
         return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}, {self.active}, {self.watchlist}"
 
@@ -37,9 +38,10 @@ class Comments(models.Model):
     def __str__(self) -> str:
         return f"{self.user}, {self.auction}, {self.comment}"
 
-class Winner(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_winner")
-    auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="winner")
+# class Winner(models.Model):
 
-    def __str__(self) -> str:
-        return f"{self.user}, {self.auction}"
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_winner")
+#     auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="winner")
+
+#     def __str__(self) -> str:
+#         return f"{self.user}, {self.auction}"

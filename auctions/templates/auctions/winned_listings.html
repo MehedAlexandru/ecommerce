@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+
+{% block body %}
+{% for listing in listings %}
+<div class="card shadow mt-4 rounded-4 w-200">
+    <div class="row d-flex">
+      <div class="col-md-5 col-lg-4 d-flex px-4 mt-2 mb-2 media">
+        <img class="card-img ing-fluid mr-3 img-thumbnail rounded-4" src="{{ listing.image_url }}" alt="" style="object-fit: fill;" />
+      </div>
+      <div class="card-body col-lg-8 col-sm-6 px-4 flex-column">
+        <h5 class="card-title ">{{ listing.title }}</h5>
+        <h6 class="card-subtitle  text-muted">By {{ listing.user }}</h6>
+        <p class="card-text pt-3 ">{{ listing.description|truncatewords:20 }}</p>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex mx-auto mt-auto">
+        <div class="row col-8">
+          <div class="d-flex row justify-content-start">
+            <p class="card-text pb-0 h5 mb-0">Current bid is: {{ listing.starting_bid|floatformat:2|intcomma }} RON</p>
+            <p class="card-text ">You Won!!</p>
+            {% comment %} <p class="card-text">Current bid: \NA</p> {% endcomment %}
+          </div>
+        </div>
+        <div class="d-flex col-4 justify-content-end">
+          <a href="{% url 'listing' listing.id %}" class="btn btn-primary mt-1">View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <h3 class="text-center">No closed listings.</h3>
+  {% endfor %}
+ 
+{% endblock body %}
