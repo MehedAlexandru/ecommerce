@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, render
 from django.urls import reverse
-from auctions.models import Auction_listings, Bids
+from auctions.models import Auction_listings
 from django.contrib.auth.decorators import login_required
 from .forms import NewListingForm
 

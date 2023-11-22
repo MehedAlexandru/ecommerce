@@ -21,15 +21,6 @@ class Auction_listings(models.Model):
         return f"{self.title}, {self.description}, {self.starting_bid}, {self.image_url}, {self.category}, {self.active}, {self.watchlist}"
 
 
-class Bids(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
-    auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="bids")
-    bid = models.IntegerField()
-
-    def __str__(self) -> str:
-        return f"{self.user}, {self.auction}, {self.bid}"
-
-
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comments")
     auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="comments")
@@ -38,10 +29,3 @@ class Comments(models.Model):
     def __str__(self) -> str:
         return f"{self.user}, {self.auction}, {self.comment}"
 
-# class Winner(models.Model):
-
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_winner")
-#     auction = models.ForeignKey(Auction_listings, on_delete=models.CASCADE, related_name="winner")
-
-#     def __str__(self) -> str:
-#         return f"{self.user}, {self.auction}"
