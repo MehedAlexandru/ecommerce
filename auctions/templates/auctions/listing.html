@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block body %}
-<div class="container px-2" style="max-width: 1400px;">
+<div class="container px-2" style="max-width: 1300px;">
     <div class="card shadow b-1 rounded-4">
         <div class="card-img col-sm px-2 pt-2 rounded-top-4 d-flex justify-content-center">
             <img class="card-img rounded-4 spec" src="{{ listing.image_url }}" alt="listing_image">
@@ -56,6 +56,41 @@
     
     </div>
 
+</div>
+
+<div class="container py-3" style="max-width: 1300px;">
+    <div class="card shadow rouded-4">
+        <div class="card-header">
+            <h2 class="card-title">Add a comment</h2>
+        </div>
+        <form action="{% url 'add_comment' listing.id %}" method="POST">
+            {% csrf_token %}
+            <row class="">
+                <div class="d-flex mt-3 justify-content-center">
+                    <textarea class="rounded-4" name="comment" style="width: 95%;" rows="10"></textarea>
+                </div>
+                <div class="mx-3 mb-3">
+                    <button type="submit" class="btn btn-primary">Add comment</button>
+                </div>
+            </row>    
+        </form>
+    </div>
+</div>
+
+
+<div class="container pt-3" style="max-width: 1300px;">
+    {% for comment in comments %}
+    <div class="card shadow rounded-4 mb-3">
+        <div class="card-body">
+            {{ comment.comment }}
+        </div>
+        <div class="card-footer">
+            <p class="card-text">Posted by {{ comment.user }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center h2 d-flex justify-content-center">No comments yet</p>
+    {% endfor %}
 </div>
 
 {% endblock body %}

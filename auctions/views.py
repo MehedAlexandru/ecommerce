@@ -131,8 +131,10 @@ def display_watchlist(request):
 def listing(request, listing_id):
     # get listing by id
     listings = Auction_listings.objects.get(pk=listing_id)
+    comments = listings.comments.filter(auction=listings)
     return render(request, "auctions/listing.html", {
-        "listing": listings
+        "listing": listings,
+        "comments": comments,
     })
 
 def bid(request, listing_id):
@@ -158,25 +160,11 @@ def bid(request, listing_id):
             })
 
 
-def select_winner(listing_id):
-    listing = Auction_listings.objects.get(pk=listing_id)
-    bids = Bids.objects.filter(pk=listing.id)
-    if bids:
-        highest_bid = bids.order_by('bid').first()
-        winner = highest_bid.user
-        listing.winner = winner
-        listing.save()
-    else:
-        listing.winner = None
-        listing.save()  
-
-
 def close_listing(request, listing_id):
     listing = Auction_listings.objects.get(pk=listing_id)
     if request.method == "POST":
         if request.user.is_authenticated:
             if request.user == listing.user:
-                select_winner(listing_id)
                 listing.active = False
                 listing.save()
                 return render(request, "auctions/listing.html", {
@@ -193,8 +181,6 @@ def close_listing(request, listing_id):
                 "listing": listing,
                 "message": "You must be logged in to close the bid"
             })
-    # else:
-    #     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
         
 def winned_auctions(request):
     user = request.user
@@ -204,9 +190,18 @@ def winned_auctions(request):
         "listings": listings
     })
 
-# def comment(request, listing_id):
-#     listing = Auction_listings.objects.get(pk=listing_id)
-#     if request.method == "POST":
-#         if request.user.is_authenticated:
-
+def add_comment(request, listing_id):
+    listing = Auction_listings.objects.get(pk=listing_id)
+    user = request.user
+    if request.method == "POST":
+        if user.is_authenticated:
+            comment = request.POST["comment"]
+            listing.comments.create(user=user, auction=listing, comment=comment)
+            listing.save()
+            return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "message": "You must be logged in to add a comment"
+            })
             
