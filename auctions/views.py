@@ -77,6 +77,7 @@ def create_listing(request):
             description = form.cleaned_data["description"]
             starting_bid = form.cleaned_data["starting_bid"]
             image_url = form.cleaned_data["image_url"]
+            # categ = form.cleaned_data["categ"]
             category = form.cleaned_data["category"]
             # send data from form to database and redirect to index
             listing = Auction_listings(user=request.user, title=title, description=description,
@@ -95,7 +96,7 @@ def create_listing(request):
 
 def active_listings(request):
     # get all active listings
-    active_listings = get_list_or_404(Auction_listings, active=True)
+    active_listings = Auction_listings.objects.filter(active=True)
     return render(request, "auctions/index.html", {
         "active_listings": active_listings
     })
@@ -181,7 +182,9 @@ def close_listing(request, listing_id):
                 "listing": listing,
                 "message": "You must be logged in to close the bid"
             })
-        
+
+
+@login_required       
 def winned_auctions(request):
     user = request.user
     listings = Auction_listings.objects.filter(winner=user) and Auction_listings.objects.filter(active=False)
@@ -189,6 +192,7 @@ def winned_auctions(request):
     return render(request, "auctions/winned_listings.html", {
         "listings": listings
     })
+
 
 def add_comment(request, listing_id):
     listing = Auction_listings.objects.get(pk=listing_id)
