@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, render
 from django.urls import reverse
-from auctions.models import Auction_listings
+from auctions.models import Auction_listings, Category
 from django.contrib.auth.decorators import login_required
 from .forms import NewListingForm
 
@@ -91,6 +91,15 @@ def create_listing(request):
         "form": form
         # if user is not logged in, redirect to login page. This is done by the @login_required decorator
         # the settings.py file has LOGIN_URL = '/login' which redirects to the login page
+    })
+
+
+def category(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    sorted_listings = Auction_listings.objects.filter(category=category)
+    return render(request, "auctions/category.html", {
+        "sorted_listings": sorted_listings,
+        "category": category,
     })
 
 
