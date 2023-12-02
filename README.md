@@ -25,7 +25,7 @@ To run this project locally, follow these steps:
 6. Go to [http://127.0.0.1:8000/](^1^) to view the site.
 
 
-## This is project 2 from CS50 course from Harvard
+### This is project 2 from CS50 course from Harvard
 
 ## License
 
